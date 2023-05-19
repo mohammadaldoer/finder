@@ -1,35 +1,25 @@
-// let clientSecret='58b836a5647bed6c12e39d7e9802b3b56916a910'
-// let clientID='3e183062865c00579c24'
-// search = 'mohammadaldoer'
-// let  URL=`https://api.github.com/search/users?q=${search}&client_id=${clientID}&client_secret=${clientSecret}`
-// fetch(URL)
-// .then((response) => response.json())
-// .then((repositories) => {
-// console.log(repositories.items[0].repos_url)
-// let x=repositories.items[0].repos_url
-// fetch(x)
-// .then((response) => response.json())
-// .then((repositories) => {
-// console.log(repositories)
-
-// })
-// })
 const searchButton1 = document.getElementById("searchButton1");
 const searchButton2 = document.getElementById("searchButton2");
 const winnerName = document.getElementById("winnerName");
 const winnerRepos = document.getElementById("winnerRepos");
 const menuIcon = document.querySelector(".menu-icon");
 const menu = document.querySelector(".menu");
+const searchButton3=document.getElementById("searchButton3")
 let p1_inputElement,p2_inputElement
 let  p1_reposCount,p2_reposCount
 let  p1_followersCount,p2_followersCount
 let  p1_avatarUrl,p2_avatarUrl
-
+const main=document.querySelector("main")
 let ctr=1
 let flag =false
 searchButton1.addEventListener("click", () => {
+
   searchUser(1);
   ctr++
+});
+searchButton3.addEventListener("click", () => {
+location.reload();
+ 
 });
 
 searchButton2.addEventListener("click", () => {
@@ -42,25 +32,33 @@ menuIcon.addEventListener("click", () => {
   menuIcon.classList.toggle("menu-closed");
 });
 window.onload = function() {
-  const toggleSwitch = document.getElementById("toggleSwitch");
   const currentTheme = localStorage.getItem("theme");
+  const toggleSwitch = document.getElementById("toggleSwitch");
 
   if (currentTheme) {
-    document.documentElement.setAttribute("data-theme", currentTheme);
-
+    
     if (currentTheme === "dark") {
+      document.body.setAttribute("data-theme", currentTheme);
+    main.style.background=`black`
+    
       toggleSwitch.checked = true;
+    }else{
+      document.body.setAttribute("data-theme", currentTheme);
+      main.style.background=`white`
     }
   }
 
   function switchTheme(e) {
     if (e.target.checked) {
       document.body.setAttribute("data-theme", "dark");
-      document.querySelector('.navbar').className='navbar navbar-expand-lg  navbar-dark bg-dark'
+      main.style.background="black"
+      //document.querySelector('.navbar').className='navbar navbar-expand-lg  navbar-dark bg-dark'
       localStorage.setItem("theme", "dark");
     } else {
       document.body.setAttribute("data-theme", "light");
-      document.querySelector('.navbar').className='navbar navbar-expand-lg navbar-light bg-light'
+      main.style.background="white"
+
+      //document.querySelector('.navbar').className='navbar navbar-expand-lg navbar-light bg-light'
       localStorage.setItem("theme", "light");
     }
   }
@@ -88,7 +86,7 @@ async function searchUser(userNumber) {
      inputElement.value = "";
     inputElement.placeholder = "Enter Github username";
     userInfo.innerHTML = `
-      <img src="${p2_avatarUrl}" alt="${username}'s avatar">
+      <img src="${p2_avatarUrl}" alt="${username}'s avatar"  width="200px"height="200px">
       <h3>${username}</h3>
       <p>Followers: ${p2_followersCount}</p>
       <p>Repos: ${p2_reposCount}</p>
@@ -104,7 +102,7 @@ async function searchUser(userNumber) {
       inputElement.value = "";
     inputElement.placeholder = "Enter Github username";
     userInfo.innerHTML = `
-      <img src="${p1_avatarUrl}" alt="${username}'s avatar">
+      <img src="${p1_avatarUrl}" alt="${username}'s avatar" width="200px"height="200px">
       <h3>${username}</h3>
       <p>Followers: ${p1_followersCount}</p>
       <p>Repos: ${p1_reposCount}</p>
@@ -121,27 +119,20 @@ async function searchUser(userNumber) {
 
 function showWinner() {
 if(flag){
-  if(p1_reposCount>p2_reposCount)
-  document.getElementById(`winnerRepos`).innerText = `player one won with ${p1_reposCount} repos`;
+  if(p1_reposCount>p2_reposCount){
+  document.getElementById(`winnerRepos`).innerText = `User 1 won with ${p1_reposCount} repos`;
+  searchButton1.parentElement.style.background="blue"
+  }
 else if(p1_reposCount<p2_reposCount){
-  document.getElementById(`winnerRepos`).innerText = `player two won with ${p2_reposCount} repos`;
+  document.getElementById(`winnerRepos`).innerText = `User 2 won with ${p2_reposCount} repos`;
+  searchButton2.parentElement.style.background="blue"
 
 }
 else{
+  searchButton2.parentElement.style.background="green"
+  searchButton1.parentElement.style.background="green"
+
   document.getElementById(`winnerRepos`).innerText = `draw`;
 }
 }
-  // const otherUserNumber = userNumber === 1 ? 2 : 1;
-  // const otherUserReposCount = parseInt(document.getElementById(`winnerRepos${otherUserNumber}`).textContent);
-  // const winner = reposCount > otherUserReposCount ? username : document.getElementById(`winnerName${otherUserNumber}`).textContent;
-  // const winnerReposText = reposCount > otherUserReposCount ? `${reposCount} repos` : `${otherUserReposCount} repos`;
-  // const winnerNameElement = document.getElementById(`winnerName`);
-  // const winnerReposElement = document.getElementById(`winnerRepos`);
-
-  // winnerNameElement.textContent = winner;
-  // winnerReposElement.textContent = winnerReposText;
-
-  // if (otherUserReposCount > 0) {
-  //   document.getElementById(`winnerRepos`).innerText = `${otherUserReposCount} repos`;
-  // }
 }

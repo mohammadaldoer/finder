@@ -8,25 +8,32 @@ let pic =document.getElementById("pic")
 let namee=document.getElementById("namee")
 let followers=document.getElementById("followers")
 let following=document.getElementById("following")
+
 btn.addEventListener("click", function(event) {
   event.preventDefault();
   console.log(theInput.value);
   getRepos()
 });
+
 tar.addEventListener("click", function(event) {
     event.preventDefault();
-   
     getAllRepos()
   });
+
   window.onload = function() {
   const toggleSwitch = document.getElementById("toggleSwitch");
   const currentTheme = localStorage.getItem("theme");
 
   if (currentTheme) {
-    document.documentElement.setAttribute("data-theme", currentTheme);
-
-    if (currentTheme === "dark") {
+    document.body.setAttribute("data-theme", currentTheme);
+   if (currentTheme === "dark") {
       toggleSwitch.checked = true;
+      document.querySelector('.navbar').className='navbar navbar-expand-lg  navbar-dark bg-dark'
+
+    }
+     else{
+      document.querySelector('.navbar').className='navbar navbar-expand-lg navbar-light bg-light'
+
     }
   }
 
@@ -34,10 +41,13 @@ tar.addEventListener("click", function(event) {
     if (e.target.checked) {
       document.body.setAttribute("data-theme", "dark");
       document.querySelector('.navbar').className='navbar navbar-expand-lg  navbar-dark bg-dark'
+      document.getElementById("show_cont").style.background="black"
       localStorage.setItem("theme", "dark");
     } else {
       document.body.setAttribute("data-theme", "light");
       document.querySelector('.navbar').className='navbar navbar-expand-lg navbar-light bg-light'
+     document.getElementById("show_cont").style.background="white"
+
       localStorage.setItem("theme", "light");
     }
   }
@@ -64,12 +74,7 @@ getButton.onclick = function () {
     console.log(theInput.value);
     getRepos()
   });
-// let calender=document.getElementById("calender")
-let clientSecret='58b836a5647bed6c12e39d7e9802b3b56916a910'
-let clientID='3e183062865c00579c24'
 let x=`https://api.github.com/users/${theInput.value}`
-let  URL=`https://api.github.com/search/users?q=${theInput.value}&client_id=${clientID}&client_secret=${clientSecret}`
-
 function getAllRepos(){
     if (theInput.value == "") {
         reposData.innerHTML = "<span>Please Write Github Username.</span>";
@@ -103,9 +108,7 @@ function getAllRepos(){
             let lang=document.createElement("div")
             lang.appendChild(document.createTextNode( repo.language))
              mainDiv.appendChild(document.createElement('br'))
-            //  mainDiv.appendChild(document.createElement('br'))
-            //  mainDiv.appendChild(document.createElement('br'))
-            //  mainDiv.appendChild(document.createElement('br'))
+
              let circle=document.createElement("div")
              circle.style.width="10px"
              circle.style.height="10px"
@@ -172,9 +175,6 @@ function getRepos() {
         let lang=document.createElement("div")
         lang.appendChild(document.createTextNode( repo.language))
          mainDiv.appendChild(document.createElement('br'))
-        //  mainDiv.appendChild(document.createElement('br'))
-        //  mainDiv.appendChild(document.createElement('br'))
-        //  mainDiv.appendChild(document.createElement('br'))
          let circle=document.createElement("div")
          circle.style.width="10px"
          circle.style.height="10px"
@@ -183,25 +183,45 @@ function getRepos() {
          circle.style.backgroundColor="red"
             else{
               circle.style.backgroundColor="yellow"
-
             }
             // circle.style.marginTop='10px'
-            lang.style.marginTop='30px'
-
+        lang.style.marginTop="30px";
         mainDiv.appendChild(lang)
         mainDiv.appendChild(circle)
         mainDiv.className = 'repo-box';
         reposData.appendChild(mainDiv);
-        }
-    });
-    fetch(`https://api.github.com/users/${theInput.value}`)
-    .then((response) => response.json())
-    .then((repositories) => {
-      im.src=repositories.avatar_url
-      following.innerTexta=`following : ${repositories.following}`
-      followers.innerText=`followers : ${repositories.followers}`
-      namee.innerText=repositories.login
+      }
+      im.src=repositories[0].owner.avatar_url
+      console.log(repositories)
+      namee.innerText=repositories[0].owner.login
+      
+      
 
+   google.charts.load("current", { packages: ["calendar"] });
+   google.charts.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+     var dataTable = new google.visualization.DataTable();
+     dataTable.addColumn({ type: "date", id: "Date" });
+     dataTable.addColumn({ type: "number", id: "contribute" });
+     for (let i = 0; i < repositories.length; i++) {
+       const yearr = repositories[i].created_at.slice(0, 4);
+       const monthh = repositories[i].created_at.slice(5, 7);
+       const dayy = repositories[i].created_at.slice(8, 10);
+       if(yearr=="2023")
+       dataTable.addRows([[new Date(yearr, monthh, dayy), 37900 + i]]);
+     }
+     var chart = new google.visualization.Calendar(
+       document.getElementById("show_cont")
+     );
+
+     var options = {
+       title: "repo contribution data ",
+       height: 600,
+     };
+
+     chart.draw(dataTable, options);
+      } 
     });
   }
 }
