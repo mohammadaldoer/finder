@@ -11,9 +11,9 @@ let  p1_followersCount,p2_followersCount
 let  p1_avatarUrl,p2_avatarUrl
 const main=document.querySelector("main")
 let ctr=1
-let flag =false
+let flag2 =false,flag1=false
 searchButton1.addEventListener("click", () => {
-
+flag1=true
   searchUser(1);
   ctr++
 });
@@ -24,13 +24,10 @@ location.reload();
 
 searchButton2.addEventListener("click", () => {
   searchUser(2);
-  flag=true
+  flag2=true
 });
 
-menuIcon.addEventListener("click", () => {
-  menu.classList.toggle("menu-open");
-  menuIcon.classList.toggle("menu-closed");
-});
+
 window.onload = function() {
   const currentTheme = localStorage.getItem("theme");
   const toggleSwitch = document.getElementById("toggleSwitch");
@@ -112,13 +109,15 @@ async function searchUser(userNumber) {
     showWinner();
     }
     
-  } else {
+  } 
+  else
+  {
     alert("User not found, please check the username and try again");
   }
 }
 
 function showWinner() {
-if(flag){
+if(flag1&&flag2){
   if(p1_reposCount>p2_reposCount){
   document.getElementById(`winnerRepos`).innerText = `User 1 won with ${p1_reposCount} repos`;
   searchButton1.parentElement.style.background="blue"

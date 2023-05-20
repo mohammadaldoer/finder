@@ -75,11 +75,14 @@ getButton.onclick = function () {
     getRepos()
   });
 let x=`https://api.github.com/users/${theInput.value}`
+
+
 function getAllRepos(){
     if (theInput.value == "") {
         reposData.innerHTML = "<span>Please Write Github Username.</span>";
       } else {
          let ctr=0
+         try{
         fetch(`https://api.github.com/users/${theInput.value}/repos`)
         .then((response) => response.json())
         .then((repositories) => {
@@ -132,13 +135,20 @@ function getAllRepos(){
             reposData.appendChild(mainDiv);
           });
         });
-}}
+      }
+       catch(error )
+        {
+          console.error(error); // log the error to the console
+          alert("An error occurred while fetching repositories data: " + error.message); // display an error message to the user
+        };  
+      }}
 // // Get Repos Function
 function getRepos() {
   if (theInput.value == "") { // If Value Is Empty
     reposData.innerHTML = "<span>Please Write Github Username.</span>";
   } else {  
      let ctr=0
+     try{
     fetch(`https://api.github.com/users/${theInput.value}/repos`)
     .then((response) => response.json())
     .then((repositories) => {
@@ -179,11 +189,15 @@ function getRepos() {
          circle.style.width="10px"
          circle.style.height="10px"
          circle.borderRadius='50%'
-         if( repo.language=="HTML")
-         circle.style.backgroundColor="red"
-            else{
-              circle.style.backgroundColor="yellow"
-            }
+            if( repo.language=="HTML")
+            circle.style.backgroundColor="red"
+               else if( repo.language=="JavaScript"){
+                 circle.style.backgroundColor="blue"
+   
+               }else{
+                   circle.style.backgroundColor="yellow"
+
+               }
             // circle.style.marginTop='10px'
         lang.style.marginTop="30px";
         mainDiv.appendChild(lang)
@@ -222,6 +236,12 @@ function getRepos() {
 
      chart.draw(dataTable, options);
       } 
-    });
+    });}
+    catch(error){
+      {
+        console.error(error); // log the error to the console
+        alert("An error occurred while fetching repositories data: " + error.message); // display an error message to the user
+      }; 
+    }
   }
 }
